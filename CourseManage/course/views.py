@@ -7,11 +7,14 @@ from .models import Course
 from rest_framework.decorators import api_view
 from rest_framework import status
 
+
 def get_course(name):
     try:
-        return Course.objects.get(name=name)
+        course = Course.objects.get(name=name)
     except:
-        raise Http404
+        return Response({"message": "Course not exist!"}, status=status.HTTP_404_NOT_FOUND)
+
+
 @api_view(["GET"])
 def get_all_course(request):
     courses = Course.objects.all()
@@ -29,6 +32,10 @@ def get(request, name):
 @api_view(["POST"])
 def post(request):
     data = request.data
+    all_course = Course.objects.all()
+    for course in all_course:
+        if data["name"] == course.name:
+            return Response({"message": "Course already exist!"}, status=status.HTTP_400_BAD_REQUEST)
     serializer = CourseSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
@@ -43,10 +50,12 @@ def delete(request, name):
     return Response({"message": "delete successfully"}, status=status.HTTP_200_OK)
 
 
-@api_view(["PUT"])
+@api_view(["POST"])
 def update(request, name):
     course = get_course(name)
     course.name = request.data["name"]
     course.credit = request.data["credit"]
     serializer = CourseSerializer(course)
+    if serializer.is_valid():
+        serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

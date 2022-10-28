@@ -4,13 +4,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import CourseSerializer
 from .models import Course
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated
 
 def get_course(name):
     try:
         course = Course.objects.get(name=name)
+        return course
     except:
         return Response({"message": "Course not exist!"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -52,10 +53,5 @@ def delete(request, name):
 
 @api_view(["POST"])
 def update(request, name):
-    course = get_course(name)
-    course.name = request.data["name"]
-    course.credit = request.data["credit"]
-    serializer = CourseSerializer(course)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    Course.objects.filter(name=name).update(name=request.data["name"], credit=request.data["credit"])
+    return Response({"message": "Successful updated"}, status=status.HTTP_200_OK)

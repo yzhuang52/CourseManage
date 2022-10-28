@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-go%ne6u1v*br2(2^=z(^)toa6aux8z8md@&v8%uttkpbfj_$7f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user',
     "course",
     "rest_framework",
     "rest_framework.authtoken",
@@ -49,12 +48,14 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
+]
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'CourseManage.urls'
 
 TEMPLATES = [

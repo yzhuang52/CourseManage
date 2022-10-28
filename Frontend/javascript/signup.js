@@ -13,7 +13,7 @@ function submitForm(data){
             body: JSON.stringify(data)
         })
         if(promise.ok){
-
+            location.href = location.href.replace("signup.html", "login.html")
         }
     })
 }
